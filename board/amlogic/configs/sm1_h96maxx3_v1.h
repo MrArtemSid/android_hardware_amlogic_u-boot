@@ -31,12 +31,12 @@
  * platform power init config
  */
 #define CONFIG_PLATFORM_POWER_INIT
-#define CONFIG_VCCK_INIT_VOLTAGE	800		// VCCK power up voltage
-#define CONFIG_VDDEE_INIT_VOLTAGE	840		// VDDEE power up voltage
+#define CONFIG_VCCK_INIT_VOLTAGE	850		// VCCK power up voltage
+#define CONFIG_VDDEE_INIT_VOLTAGE	880		// VDDEE power up voltage
 #define CONFIG_VDDEE_SLEEP_VOLTAGE	770		// VDDEE suspend voltage
 
 /* configs for CEC */
-#define CONFIG_CEC_OSD_NAME		"A95XF3AIR"
+#define CONFIG_CEC_OSD_NAME		"H96MAXX3"
 #define CONFIG_CEC_WAKEUP
 /*if use bt-wakeup,open it*/
 #define CONFIG_BT_WAKEUP
@@ -64,14 +64,14 @@
 
 //Enable ir remote wake up for bl30
 #define CONFIG_IR_REMOTE_WAKEUP
-#define CONFIG_IR_REMOTE_POWER_UP_KEY_VAL1 0xe31cdf00 //cyxtech a95x ir --- power
-#define CONFIG_IR_REMOTE_POWER_UP_KEY_VAL2 0xb24d4040 //cyxtech cs918 ir --- power
-#define CONFIG_IR_REMOTE_POWER_UP_KEY_VAL3 0x7e817f80 //cyxtech pp ir --- power
-#define CONFIG_IR_REMOTE_POWER_UP_KEY_VAL4 0xef10fe01 //amlogic tv ir --- power
-#define CONFIG_IR_REMOTE_POWER_UP_KEY_VAL5 0XBB44FB04 //amlogic tv ir --- ch+
-#define CONFIG_IR_REMOTE_POWER_UP_KEY_VAL6 0xF20DFE01 //amlogic tv ir --- ch-
-#define CONFIG_IR_REMOTE_POWER_UP_KEY_VAL7 0XBA45BD02 //amlogic small ir--- power
-#define CONFIG_IR_REMOTE_POWER_UP_KEY_VAL8 0xe51afb04
+#define CONFIG_IR_REMOTE_POWER_UP_KEY_VAL1 0xe51afb04 //amlogic-remote-1 --- power
+#define CONFIG_IR_REMOTE_POWER_UP_KEY_VAL2 0xbf40fe01 //amlogic-remote-2 --- power
+#define CONFIG_IR_REMOTE_POWER_UP_KEY_VAL3 0xba45bd02 //amlogic-remote-3 --- power
+#define CONFIG_IR_REMOTE_POWER_UP_KEY_VAL4 0x7e817f80 //amlogic-remote-4 --- power
+#define CONFIG_IR_REMOTE_POWER_UP_KEY_VAL5 0xFFFFFFFF
+#define CONFIG_IR_REMOTE_POWER_UP_KEY_VAL6 0xFFFFFFFF
+#define CONFIG_IR_REMOTE_POWER_UP_KEY_VAL7 0xFFFFFFFF
+#define CONFIG_IR_REMOTE_POWER_UP_KEY_VAL8 0xFFFFFFFF
 #define CONFIG_IR_REMOTE_POWER_UP_KEY_VAL9 0xFFFFFFFF
 
 /*config the default parameters for adc power key*/
@@ -292,8 +292,8 @@
                     "setenv bootargs ${bootargs} androidboot.serialno=${usid};"\
                     "setenv serial ${usid};"\
                 "else "\
-                    "setenv bootargs ${bootargs} androidboot.serialno=1234567897;"\
-                    "setenv serial 1234567897;"\
+                    "setenv bootargs ${bootargs} androidboot.serialno=1234567898;"\
+                    "setenv serial 1234567898;"\
                 "fi;"\
                 "if keyman read mac ${loadaddr} str; then "\
                     "setenv bootargs ${bootargs} mac=${mac} androidboot.mac=${mac};"\
@@ -318,11 +318,11 @@
             "fi;"\
             "\0"\
 	"irremote_update="\
-		"if irkey 2500000 0xe31cdf00 0xb24d4040; then "\
+		"if irkey 2500000 0xe31cfb04 0xb748fb04; then "\
 			"echo read irkey ok!; " \
-		"if itest ${irkey_value} == 0xe31cdf00; then " \
+		"if itest ${irkey_value} == 0xe31cfb04; then " \
 			"run update;" \
-		"else if itest ${irkey_value} == 0xb24d4040; then " \
+		"else if itest ${irkey_value} == 0xb748fb04; then " \
 			"run update;\n" \
 			"fi;fi;" \
 		"fi;\0" \
@@ -555,7 +555,7 @@
 #define CONFIG_USBDOWNLOAD_GADGET 1
 #define CONFIG_SYS_CACHELINE_SIZE 64
 #define CONFIG_FASTBOOT_MAX_DOWN_SIZE	0x8000000
-#define CONFIG_DEVICE_PRODUCT	"a95xf3air"
+#define CONFIG_DEVICE_PRODUCT	"h96maxx3"
 
 //UBOOT Facotry usb/sdcard burning config
 #define CONFIG_AML_V2_FACTORY_BURN              1       //support facotry usb burning
