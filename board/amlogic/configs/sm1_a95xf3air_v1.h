@@ -32,11 +32,11 @@
  */
 #define CONFIG_PLATFORM_POWER_INIT
 #define CONFIG_VCCK_INIT_VOLTAGE	800		// VCCK power up voltage
-#define CONFIG_VDDEE_INIT_VOLTAGE	850		// VDDEE power up voltage
+#define CONFIG_VDDEE_INIT_VOLTAGE	840		// VDDEE power up voltage
 #define CONFIG_VDDEE_SLEEP_VOLTAGE	770		// VDDEE suspend voltage
 
 /* configs for CEC */
-#define CONFIG_CEC_OSD_NAME		"AML_TV"
+#define CONFIG_CEC_OSD_NAME		"A95XF3AIR"
 #define CONFIG_CEC_WAKEUP
 /*if use bt-wakeup,open it*/
 #define CONFIG_BT_WAKEUP
@@ -64,14 +64,14 @@
 
 //Enable ir remote wake up for bl30
 #define CONFIG_IR_REMOTE_WAKEUP
-#define CONFIG_IR_REMOTE_POWER_UP_KEY_VAL1 0xef10fe01 //amlogic tv ir --- power
-#define CONFIG_IR_REMOTE_POWER_UP_KEY_VAL2 0XBB44FB04 //amlogic tv ir --- ch+
-#define CONFIG_IR_REMOTE_POWER_UP_KEY_VAL3 0xF20DFE01 //amlogic tv ir --- ch-
-#define CONFIG_IR_REMOTE_POWER_UP_KEY_VAL4 0XBA45BD02 //amlogic small ir--- power
-#define CONFIG_IR_REMOTE_POWER_UP_KEY_VAL5 0xe51afb04
-#define CONFIG_IR_REMOTE_POWER_UP_KEY_VAL6 0xFFFFFFFF
-#define CONFIG_IR_REMOTE_POWER_UP_KEY_VAL7 0xFFFFFFFF
-#define CONFIG_IR_REMOTE_POWER_UP_KEY_VAL8 0xFFFFFFFF
+#define CONFIG_IR_REMOTE_POWER_UP_KEY_VAL1 0xe31cdf00 //cyxtech a95x ir --- power
+#define CONFIG_IR_REMOTE_POWER_UP_KEY_VAL2 0xb24d4040 //cyxtech cs918 ir --- power
+#define CONFIG_IR_REMOTE_POWER_UP_KEY_VAL3 0x7e817f80 //cyxtech pp ir --- power
+#define CONFIG_IR_REMOTE_POWER_UP_KEY_VAL4 0xef10fe01 //amlogic tv ir --- power
+#define CONFIG_IR_REMOTE_POWER_UP_KEY_VAL5 0XBB44FB04 //amlogic tv ir --- ch+
+#define CONFIG_IR_REMOTE_POWER_UP_KEY_VAL6 0xF20DFE01 //amlogic tv ir --- ch-
+#define CONFIG_IR_REMOTE_POWER_UP_KEY_VAL7 0XBA45BD02 //amlogic small ir--- power
+#define CONFIG_IR_REMOTE_POWER_UP_KEY_VAL8 0xe51afb04
 #define CONFIG_IR_REMOTE_POWER_UP_KEY_VAL9 0xFFFFFFFF
 
 /*config the default parameters for adc power key*/
@@ -138,13 +138,6 @@
                 "run init_display; run storeargs; run update;"\
             "else fi;"\
             "\0"\
-        "upgrade_adc_key="\
-            "saradc open 2; saradc getval; "\
-            "if saradc get_in_range 0x0 0x50; then "\
-                "echo update by adc key; "\
-                "run update; "\
-            "fi;"\
-            "\0"\
         "storeargs="\
 		"get_bootloaderversion;" \
 		"setenv bootargs ${initargs}  hdr_priority=${hdr_priority} otg_device=${otg_device} reboot_mode_android=${reboot_mode_android} logo=${display_layer},loaded,${fb_addr} fb_width=${fb_width} fb_height=${fb_height} display_bpp=${display_bpp} outputmode=${outputmode} vout=${outputmode},enable panel_type=${panel_type} lcd_ctrl=${lcd_ctrl} hdmitx=${cecconfig},${colorattribute} hdmimode=${hdmimode} hdmichecksum=${hdmichecksum} dolby_vision_on=${dolby_vision_on} frac_rate_policy=${frac_rate_policy} hdmi_read_edid=${hdmi_read_edid} cvbsmode=${cvbsmode} osd_reverse=${osd_reverse} video_reverse=${video_reverse} irq_check_en=${Irq_check_en}  androidboot.selinux=${EnableSelinux} androidboot.firstboot=${firstboot} jtag=${jtag}; "\
@@ -173,7 +166,7 @@
             "else if test ${reboot_mode} = cold_boot; then "\
                     "setenv reboot_mode_android ""normal"";"\
                     "run storeargs;"\
-            "else if test ${reboot_mode} = fastboot; then "\
+            "else if test ${reboot_mode} = fastboot -o ${reboot_mode} = bootloader; then "\
                 "setenv reboot_mode_android ""normal"";"\
                 "run storeargs;"\
                 "fastboot;"\
@@ -299,8 +292,8 @@
                     "setenv bootargs ${bootargs} androidboot.serialno=${usid};"\
                     "setenv serial ${usid};"\
                 "else "\
-                    "setenv bootargs ${bootargs} androidboot.serialno=1234567892;"\
-                    "setenv serial 1234567892;"\
+                    "setenv bootargs ${bootargs} androidboot.serialno=1234567897;"\
+                    "setenv serial 1234567897;"\
                 "fi;"\
                 "if keyman read mac ${loadaddr} str; then "\
                     "setenv bootargs ${bootargs} mac=${mac} androidboot.mac=${mac};"\
@@ -313,10 +306,6 @@
                 "else "\
                     "setenv bootargs ${bootargs} androidboot.oem.key1=ATV00100020;"\
                 "fi;"\
-                "if keyman read dtbo ${loadaddr} str; then "\
-                    "setenv bootargs ${bootargs} androidboot.dtbo_idx=${dtbo};"\
-                    "setenv androidboot.dtbo_idx ${dtbo};"\
-                "fi;"\
             "fi;"\
             "\0"\
         "bcb_cmd="\
@@ -328,19 +317,12 @@
                 "echo detect recovery key; run recovery_from_flash;"\
             "fi;"\
             "\0"\
-        "wifi_module_check="\
-            "if gpio input GPIOX_6; then "\
-                "echo M5: no wifi; keyman write dtbo str 0; "\
-            "else "\
-                "echo M5: has wifi; keyman write dtbo str 1; "\
-            "fi;fi;"\
-            "\0"\
 	"irremote_update="\
-		"if irkey 2500000 0xe31cfb04 0xb748fb04; then "\
+		"if irkey 2500000 0xe31cdf00 0xb24d4040; then "\
 			"echo read irkey ok!; " \
-		"if itest ${irkey_value} == 0xe31cfb04; then " \
+		"if itest ${irkey_value} == 0xe31cdf00; then " \
 			"run update;" \
-		"else if itest ${irkey_value} == 0xb748fb04; then " \
+		"else if itest ${irkey_value} == 0xb24d4040; then " \
 			"run update;\n" \
 			"fi;fi;" \
 		"fi;\0" \
@@ -350,9 +332,7 @@
             "run bcb_cmd; "\
             "run factory_reset_poweroff_protect;"\
             "run upgrade_check;"\
-            "run upgrade_adc_key;"\
             "run init_display;"\
-            "run wifi_module_check;"\
             "run storeargs;"\
             "run recovery_key;" \
             "bcb uboot-command;"\
@@ -575,7 +555,7 @@
 #define CONFIG_USBDOWNLOAD_GADGET 1
 #define CONFIG_SYS_CACHELINE_SIZE 64
 #define CONFIG_FASTBOOT_MAX_DOWN_SIZE	0x8000000
-#define CONFIG_DEVICE_PRODUCT	"m5"
+#define CONFIG_DEVICE_PRODUCT	"a95xf3air"
 
 //UBOOT Facotry usb/sdcard burning config
 #define CONFIG_AML_V2_FACTORY_BURN              1       //support facotry usb burning

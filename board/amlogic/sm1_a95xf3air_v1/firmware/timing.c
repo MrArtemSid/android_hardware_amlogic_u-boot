@@ -56,61 +56,60 @@
  *
  */
 
+/*
+ * DDR settings are taken from the stock A95X F3 Air bootloader (acs.bin),
+ * which carries one DDR3 and two LPDDR3 configs; BL2 tries them in order.
+ */
 ddr_set_t __ddr_setting[] __attribute__ ((section(".ddr_settings"))) = {
 {
-	/* sm1 Banana Pi bpi-m5 lpddr4 */
+	/* sm1 A95X F3 Air ddr3 (stock acs.bin set 0) */
 	.board_id				= CONFIG_BOARD_ID_MASK,
 	.version				= 1,
-	//.dram_rank_config		= CONFIG_DDR0_32BIT_RANK01_CH0,
-	.dram_rank_config		= CONFIG_DDR0_32BIT_RANK01_CH01,
-	.ddr_rfc_type			= DDR_RFC_TYPE_LPDDR4_8Gbx1,
-	.DramType				= CONFIG_DDR_TYPE_LPDDR4,
-	.DRAMFreq				= {1392, 0, 0, 0},
+	.dram_rank_config		= CONFIG_DDR0_32BIT_RANK0_CH0,
+	.ddr_rfc_type			= DDR_RFC_TYPE_DDR3_512Mbx1,
+	.DramType				= CONFIG_DDR_TYPE_DDR3,
+	.DRAMFreq				= {792, 0, 0, 0},
 	.ddr_base_addr			= CFG_DDR_BASE_ADDR,
 	.ddr_start_offset		= CFG_DDR_START_OFFSET,
-	//.imem_load_addr		= 0xFFFC0000, //sram
-	//.dmem_load_size		= 0x1000, //4K
 
 	.DisabledDbyte			= 0xf0,
-	.Is2Ttiming				= 0,
-	.HdtCtrl				= 0xa,
-	.dram_cs0_size_MB		= 0x800,//2048,
-	.dram_cs1_size_MB		= 0x800,//2048,
-	.training_SequenceCtrl	= {0x131f,0x61}, //ddr3 0x21f 0x31f
-	.phy_odt_config_rank	= {0x23,0x13}, //use 0x23 0x13  compatibility with 1rank and 2rank //targeting rank 0. [3:0] is used //for write ODT [7:4] is used for //read ODT
-	.dfi_odt_config			= 0x0d0d,  //use 0d0d compatibility with 1rank and 2rank  //0808
+	.Is2Ttiming				= 1,
+	.HdtCtrl				= 0xC8,
+	.dram_cs0_size_MB		= 0xffff,
+	.dram_cs1_size_MB		= 0,
+	.training_SequenceCtrl	= {0x31f,0}, //ddr3 0x21f 0x31f
+	.phy_odt_config_rank	= {0x30,0x30},
+	.dfi_odt_config			= 0x0c0c,
 	.PllBypassEn			= 0, //bit0-ps0,bit1-ps1
 	.ddr_rdbi_wr_enable		= 0,
 	.clk_drv_ohm			= 40,
 	.cs_drv_ohm				= 40,
 	.ac_drv_ohm				= 40,
-	.soc_data_drv_ohm_p		= 40,
-	.soc_data_drv_ohm_n		= 40,
-	.soc_data_odt_ohm_p		= 0,
-	.soc_data_odt_ohm_n		= 48,
-	.dram_data_drv_ohm		= 40, //lpddr4 sdram only240/1-6
-	.dram_data_odt_ohm		= 48,
-	.dram_ac_odt_ohm		= 120,
-	.lpddr4_dram_vout_voltage_1_3_2_5_setting = 1,///1, 1/3vddq     0 2/5 vddq
-	.soc_clk_slew_rate		= 0x3ff,//0x253,
-	.soc_cs_slew_rate		= 0x100,//0x253,
-	.soc_ac_slew_rate		= 0x100,//0x253,
-	.soc_data_slew_rate		= 0x1ff,
-	.vref_output_permil		= 350,//200,
-	.vref_receiver_permil	= 0,
-	.vref_dram_permil		= 0,
-	//.vref_reverse			= 0,
-	.ac_trace_delay			= {00,0x0,0,0,0,0,0x0,00},
+	.soc_data_drv_ohm_p		= 34,
+	.soc_data_drv_ohm_n		= 34,
+	.soc_data_odt_ohm_p		= 60,
+	.soc_data_odt_ohm_n		= 0,
+	.dram_data_drv_ohm		= 34, //ddr3 sdram only 34 or 40
+	.dram_data_odt_ohm		= 60,
+	.dram_ac_odt_ohm		= 0,
+	.soc_clk_slew_rate		= 0x300,
+	.soc_cs_slew_rate		= 0x300,
+	.soc_ac_slew_rate		= 0x300,
+	.soc_data_slew_rate		= 0x200,
+	.vref_output_permil		= 500,
+	.vref_receiver_permil	= 500,
+	.vref_dram_permil		= 500,
+	.ac_trace_delay			= {32,32,32,32,32,32,32,32,32,32},
 	.ac_pinmux				= {00,00},
 	.ddr_dmc_remap			= {
-							[0] = ( 5 |  6 << 5 |  7 << 10 |  8<< 15 | 9<< 20 | 10 << 25 ),
-							[1] = ( 11|  0 << 5 |  0 << 10 | 15 << 15 | 16 << 20 | 17 << 25 ),
+							[0] = ( 5 |  6 << 5 |  7 << 10 |  8 << 15 |  9 << 20 | 10 << 25 ),
+							[1] = ( 11| 30 << 5 |  0 << 10 | 15 << 15 | 16 << 20 | 17 << 25 ),
 							[2] = ( 18| 19 << 5 | 20 << 10 | 21 << 15 | 22 << 20 | 23 << 25 ),
 							[3] = ( 24| 25 << 5 | 26 << 10 | 27 << 15 | 28 << 20 | 29 << 25 ),
-							[4] = ( 30| 12 << 5 | 13 << 10 |  14<< 15 |  0 << 20 |  0 << 25 ),
+							[4] = ( 31| 12 << 5 | 13 << 10 | 14 << 15 |  0 << 20 |  0 << 25 ),
 	},
 	.ddr_lpddr34_ca_remap	= {00,00},
-	.ddr_lpddr34_dq_remap	= {3,0,2,1,7,6,5,4, 13,12,15,14,10,8,11,9, 19,21,22,20,16,18,17,23, 26,27,25,24,31,29,30,28},
+	.ddr_lpddr34_dq_remap	= {00,00},
 	.dram_rtt_nom_wr_park	= {00,00},
 
 	/* pll ssc config:
@@ -131,60 +130,56 @@ ddr_set_t __ddr_setting[] __attribute__ ((section(".ddr_settings"))) = {
 	.diagnose				= CONFIG_DIAGNOSE_DISABLE,
 },
 {
-	/* sm1 Banana Pi bpi-m2 lpddr4 */
+	/* sm1 A95X F3 Air lpddr3 (stock acs.bin set 1) */
 	.board_id				= CONFIG_BOARD_ID_MASK,
 	.version				= 1,
-	//.dram_rank_config		= CONFIG_DDR0_32BIT_RANK01_CH0,
-	.dram_rank_config		= CONFIG_DDR0_32BIT_RANK0_CH01,
-	.ddr_rfc_type			= DDR_RFC_TYPE_LPDDR4_8Gbx1,
-	.DramType				= CONFIG_DDR_TYPE_LPDDR4,
-	.DRAMFreq				= {1392, 0, 0, 0},
+	.dram_rank_config		= CONFIG_DDR0_32BIT_RANK01_CH0,
+	.ddr_rfc_type			= DDR_RFC_TYPE_LPDDR4_4Gbx1,
+	.DramType				= CONFIG_DDR_TYPE_LPDDR3,
+	.DRAMFreq				= {912, 0, 0, 0},
 	.ddr_base_addr			= CFG_DDR_BASE_ADDR,
 	.ddr_start_offset		= CFG_DDR_START_OFFSET,
-	//.imem_load_addr		= 0xFFFC0000, //sram
-	//.dmem_load_size		= 0x1000, //4K
 
 	.DisabledDbyte			= 0xf0,
 	.Is2Ttiming				= 0,
 	.HdtCtrl				= 0xa,
-	.dram_cs0_size_MB		= 0x800,//2048,
-	.dram_cs1_size_MB		= 0,//1024,
-	.training_SequenceCtrl	= {0x131f,0x61}, //ddr3 0x21f 0x31f
-	.phy_odt_config_rank	= {0x23,0x13}, //use 0x23 0x13  compatibility with 1rank and 2rank //targeting rank 0. [3:0] is used //for write ODT [7:4] is used for //read ODT
-	.dfi_odt_config			= 0x0d0d,  //use 0d0d compatibility with 1rank and 2rank  //0808
+	.dram_cs0_size_MB		= 0xffff,
+	.dram_cs1_size_MB		= 0xffff,
+	.training_SequenceCtrl	= {0x131f,0},
+	.phy_odt_config_rank	= {0x30,0x30},
+	.dfi_odt_config			= 0x0c0c,
 	.PllBypassEn			= 0, //bit0-ps0,bit1-ps1
 	.ddr_rdbi_wr_enable		= 0,
-	.clk_drv_ohm			= 40,
-	.cs_drv_ohm				= 40,
-	.ac_drv_ohm				= 40,
+	.clk_drv_ohm			= 37,
+	.cs_drv_ohm				= 37,
+	.ac_drv_ohm				= 37,
 	.soc_data_drv_ohm_p		= 40,
 	.soc_data_drv_ohm_n		= 40,
-	.soc_data_odt_ohm_p		= 0,
-	.soc_data_odt_ohm_n		= 48,
-	.dram_data_drv_ohm		= 40, //lpddr4 sdram only240/1-6
-	.dram_data_odt_ohm		= 48,
-	.dram_ac_odt_ohm		= 120,
-	.lpddr4_dram_vout_voltage_1_3_2_5_setting = 1,///1, 1/3vddq     0 2/5 vddq
-	.soc_clk_slew_rate		= 0x3ff,//0x253,
-	.soc_cs_slew_rate		= 0x100,//0x253,
-	.soc_ac_slew_rate		= 0x100,//0x253,
-	.soc_data_slew_rate		= 0x1ff,
-	.vref_output_permil		= 350,//200,
-	.vref_receiver_permil	= 0,
-	.vref_dram_permil		= 0,
-	//.vref_reverse			= 0,
-	.ac_trace_delay			= {00,0x0,0,0,0,0,0x0,00},
+	.soc_data_odt_ohm_p		= 60,
+	.soc_data_odt_ohm_n		= 0,
+	.dram_data_drv_ohm		= 40,
+	.dram_data_odt_ohm		= 0,
+	.dram_ac_odt_ohm		= 0,
+	.soc_clk_slew_rate		= 0x3ff,
+	.soc_cs_slew_rate		= 0x3ff,
+	.soc_ac_slew_rate		= 0x3ff,
+	.soc_data_slew_rate		= 0x2ff,
+	.vref_output_permil		= 800,
+	.vref_receiver_permil	= 700,
+	.vref_dram_permil		= 500,
+	.ac_trace_delay			= {16,0,16,16,16,0,0,0,0,0},
 	.ac_pinmux				= {00,00},
 	.ddr_dmc_remap			= {
-							[0] = ( 5 |  6 << 5 |  7 << 10 |  8<< 15 | 9<< 20 | 10 << 25 ),
-							[1] = ( 11|  0 << 5 |  0 << 10 | 15 << 15 | 16 << 20 | 17 << 25 ),
-							[2] = ( 18| 19 << 5 | 20 << 10 | 21 << 15 | 22 << 20 | 23 << 25 ),
-							[3] = ( 24| 25 << 5 | 26 << 10 | 27 << 15 | 28 << 20 | 29 << 25 ),
-							[4] = ( 30| 12 << 5 | 13 << 10 |  14<< 15 |  0 << 20 |  0 << 25 ),
+							[0] = ( 5 |  6 << 5 |  7 << 10 |  8 << 15 |  9 << 20 | 10 << 25 ),
+							[1] = ( 11| 12 << 5 |  0 << 10 | 16 << 15 | 17 << 20 | 18 << 25 ),
+							[2] = ( 19| 20 << 5 | 21 << 10 | 22 << 15 | 23 << 20 | 24 << 25 ),
+							[3] = ( 25| 26 << 5 | 27 << 10 | 28 << 15 | 29 << 20 | 30 << 25 ),
+							[4] = ( 31| 13 << 5 | 14 << 10 | 15 << 15 |  0 << 20 |  0 << 25 ),
 	},
-	.ddr_lpddr34_ca_remap	= {00,00},
-	.ddr_lpddr34_dq_remap	= {3,0,2,1,7,6,5,4, 13,12,15,14,10,8,11,9, 19,21,22,20,16,18,17,23, 26,27,25,24,31,29,30,28},
+	.ddr_lpddr34_ca_remap	= {1,2,0,3},
+	.ddr_lpddr34_dq_remap	= {4,0,2,6,5,1,7,3, 10,8,11,9,12,13,14,15, 23,20,22,19,21,18,17,16, 28,31,25,30,29,24,27,26},
 	.dram_rtt_nom_wr_park	= {00,00},
+
 	/* pll ssc config:
 	 *
 	 *   pll_ssc_mode = (1<<20) | (1<<8) | ([strength] << 4) | [mode],
@@ -200,6 +195,75 @@ ddr_set_t __ddr_setting[] __attribute__ ((section(".ddr_settings"))) = {
 	.pll_ssc_mode			= (1<<20) | (1<<8) | (2<<4) | 0,//center_ssc_1000ppm
 	.ddr_func				= DDR_FUNC,
 	.magic					= DRAM_CFG_MAGIC,
+	.diagnose				= CONFIG_DIAGNOSE_DISABLE,
+},
+{
+	/* sm1 A95X F3 Air lpddr3 (stock acs.bin set 2) */
+	.board_id				= CONFIG_BOARD_ID_MASK,
+	.version				= 1,
+	.dram_rank_config		= CONFIG_DDR0_32BIT_RANK01_CH0,
+	.ddr_rfc_type			= DDR_RFC_TYPE_LPDDR4_4Gbx1,
+	.DramType				= CONFIG_DDR_TYPE_LPDDR3,
+	.DRAMFreq				= {912, 0, 0, 0},
+	.ddr_base_addr			= CFG_DDR_BASE_ADDR,
+	.ddr_start_offset		= CFG_DDR_START_OFFSET,
+
+	.DisabledDbyte			= 0xf0,
+	.Is2Ttiming				= 0,
+	.HdtCtrl				= 0xa,
+	.dram_cs0_size_MB		= 0xffff,
+	.dram_cs1_size_MB		= 0xffff,
+	.training_SequenceCtrl	= {0x131f,0},
+	.phy_odt_config_rank	= {0x30,0x30},
+	.dfi_odt_config			= 0x0c0c,
+	.PllBypassEn			= 0, //bit0-ps0,bit1-ps1
+	.ddr_rdbi_wr_enable		= 0,
+	.clk_drv_ohm			= 37,
+	.cs_drv_ohm				= 37,
+	.ac_drv_ohm				= 37,
+	.soc_data_drv_ohm_p		= 40,
+	.soc_data_drv_ohm_n		= 40,
+	.soc_data_odt_ohm_p		= 60,
+	.soc_data_odt_ohm_n		= 0,
+	.dram_data_drv_ohm		= 40,
+	.dram_data_odt_ohm		= 0,
+	.dram_ac_odt_ohm		= 0,
+	.soc_clk_slew_rate		= 0x3ff,
+	.soc_cs_slew_rate		= 0x3ff,
+	.soc_ac_slew_rate		= 0x3ff,
+	.soc_data_slew_rate		= 0x2ff,
+	.vref_output_permil		= 800,
+	.vref_receiver_permil	= 700,
+	.vref_dram_permil		= 500,
+	.ac_trace_delay			= {16,0,16,16,16,0,0,0,0,0},
+	.ac_pinmux				= {00,00},
+	.ddr_dmc_remap			= {
+							[0] = ( 5 |  6 << 5 |  7 << 10 |  8 << 15 |  9 << 20 | 10 << 25 ),
+							[1] = ( 11|  0 << 5 | 30 << 10 | 15 << 15 | 16 << 20 | 17 << 25 ),
+							[2] = ( 18| 19 << 5 | 20 << 10 | 21 << 15 | 22 << 20 | 23 << 25 ),
+							[3] = ( 24| 25 << 5 | 26 << 10 | 27 << 15 | 28 << 20 | 29 << 25 ),
+							[4] = ( 31| 12 << 5 | 13 << 10 | 14 << 15 |  0 << 20 |  0 << 25 ),
+	},
+	.ddr_lpddr34_ca_remap	= {1,2,0,3},
+	.ddr_lpddr34_dq_remap	= {4,0,2,6,5,1,7,3, 10,8,11,9,12,13,14,15, 23,20,22,19,21,18,17,16, 28,31,25,30,29,24,27,26},
+	.dram_rtt_nom_wr_park	= {00,00},
+
+	/* pll ssc config:
+	 *
+	 *   pll_ssc_mode = (1<<20) | (1<<8) | ([strength] << 4) | [mode],
+	 *      ppm = strength * 500
+	 *      mode: 0=center, 1=up, 2=down
+	 *
+	 *   eg:
+	 *     1. config 1000ppm center ss. then mode=0, strength=2
+	 *        .pll_ssc_mode = (1<<20) | (1<<8) | (2 << 4) | 0,
+	 *     2. config 3000ppm down ss. then mode=2, strength=6
+	 *        .pll_ssc_mode = (1<<20) | (1<<8) | (6 << 4) | 2,
+	 */
+	.pll_ssc_mode			= (1<<20) | (1<<8) | (2<<4) | 0,//center_ssc_1000ppm
+	.ddr_func				= DDR_FUNC,
+	.magic					= DRAM_CFG_MAGIC,
+	.diagnose				= CONFIG_DIAGNOSE_DISABLE,
 },
 };
 
@@ -351,18 +415,16 @@ bl2_reg_t __bl2_reg[] = {
 	{AO_PWM_MISC_REG_AB,  ((1 << 23) | (1 << 1)),  (0x7f << 16), 0, BL2_INIT_STAGE_PWM_INIT | PWM_CFG1,  0},
 	{AO_PIN_MUX_REG1,     (3 << 16),               (0xF << 16),  0, BL2_INIT_STAGE_PWM_INIT | PWM_CFG1,  0},
 	/* VDDEE init done */
-#if 0	// mSD card boot: unset for sm1 Banana Pi bpi-m5
-	/* Enable 5V_EN (GPIOH_8, TFLASH_VDD_EN out) */
+	/* Enable 5V_EN */
 	{GPIO_O_EN_N_REG3,    (0 << 8),                (1 << 8),     0, BL2_INIT_STAGE_1, 0},
 	{GPIO_O_REG3,         (1 << 8),                0xffffffff,   0, BL2_INIT_STAGE_1, 0},
-#endif
 	/* Enable VCCK */
 	{AO_SEC_REG0,         (1 << 0),                0xffffffff,   0, BL2_INIT_STAGE_1, 0},
 	{AO_GPIO_O,           (1 << 31),               0xffffffff,   0, BL2_INIT_STAGE_1, 0},
-	/* Init sys led1 (gpioAO_11, blue) */
+	/* Init sys led (gpioAO_11) */
 	{AO_GPIO_O_EN_N,      (0 << 11),               (1 << 11),    0, BL2_INIT_STAGE_1, 0},
-	{AO_GPIO_O,           (0 << 11),               (1 << 11),    0, BL2_INIT_STAGE_1, 0},
-	/* Init sys led2 (gpioAO_2, green) */
-	{AO_GPIO_O_EN_N,      (0 << 2),                (1 << 2),     0, BL2_INIT_STAGE_1, 0},
-	{AO_GPIO_O,           (0 << 2),                (1 << 2),     0, BL2_INIT_STAGE_1, 0},
+	{AO_GPIO_O,           (1 << 11),               (1 << 11),    0, BL2_INIT_STAGE_1, 0},
+	/* gpioAO_4 out high, as in the stock bootloader */
+	{AO_GPIO_O_EN_N,      (0 << 4),                (1 << 4),     0, BL2_INIT_STAGE_1, 0},
+	{AO_GPIO_O,           (1 << 4),                (1 << 4),     0, BL2_INIT_STAGE_1, 0},
 };
